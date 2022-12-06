@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Day6
 {
@@ -9,26 +11,19 @@ namespace Day6
         {
             string input = System.IO.File.ReadAllText(@"input.txt").Split('\n')[0];
 
-            Console.WriteLine(GetPosDifferentChar(input, 4));
-            Console.WriteLine(GetPosDifferentChar(input, 14));
+            Console.WriteLine(GetPosDifferentChar(input, 4)); // 1804
+            Console.WriteLine(GetPosDifferentChar(input, 14)); // 2508
         }
 
         public static int GetPosDifferentChar(string input, int nbChar)
         {
             for (int i = 0; i < input.Length; i++)
             {
-                string chars = input.Substring(i, nbChar);
+                HashSet<char> chars = input.Substring(i, nbChar).ToHashSet<char>();
 
-                foreach (var c in chars)
+                if (chars.Count == nbChar)
                 {
-                    if (chars.Count(m => m == c) > 1)
-                    {
-                        break;
-                    }
-                    else if (chars.Last() == c)
-                    {
-                        return i + nbChar;
-                    }
+                    return i + nbChar;
                 }
             }
 
