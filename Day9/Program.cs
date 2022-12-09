@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 
 namespace Day9
 {
@@ -45,7 +46,67 @@ namespace Day9
                 }
             }
 
-            Console.WriteLine(tail.ParcouredPositions.Select(pp => new { x = pp.X, y = pp.Y }).Distinct().ToList().Count());
+            // P1 6175
+            Console.WriteLine(tail.ParcouredPositions.Select(pp => new { x = pp.X, y = pp.Y }).Distinct().Count());
+
+            List<Tail> longTail = new List<Tail>() { new Tail(), new Tail(), new Tail(), new Tail(), new Tail(), new Tail(), new Tail(), new Tail(), new Tail(), new Tail() };
+
+            foreach (var move in moves)
+            {
+                for (int i = 1; i <= move.Number; i++)
+                {
+                    switch (move.Direction)
+                    {
+                        case 'U':
+                            longTail[0].CurrentPosition.Y++;
+                            break;
+                        case 'D':
+                            longTail[0].CurrentPosition.Y--;
+                            break;
+                        case 'L':
+                            longTail[0].CurrentPosition.X--;
+                            break;
+                        case 'R':
+                            longTail[0].CurrentPosition.X++;
+                            break;
+                    }
+
+                    for (int j = 0; j < longTail.Count; j++)
+                    {
+                        if (longTail[j].NeedToMove(longTail[j == 0 ? 0 : j - 1].CurrentPosition))
+                        {
+                            Position newPosition = longTail[j].WhereToMove(longTail[j == 0 ? 0 : j - 1].CurrentPosition);
+                            longTail[j].CurrentPosition.X += newPosition.X;
+                            longTail[j].CurrentPosition.Y += newPosition.Y;
+                            longTail[j].ParcouredPositions.Add(new Position(longTail[j].CurrentPosition));
+                        }
+                    }
+
+                    //for (int j = 20; j >= -10; j--)
+                    //{
+                    //    for (int k = -10; k < 20; k++)
+                    //    {
+                    //        if (longTail.Select(t => t.CurrentPosition).FirstOrDefault(pp => pp.X == k && pp.Y == j) != null)
+                    //        {
+                    //            Console.Write('H');
+                    //        }
+                    //        else
+                    //        {
+                    //            Console.Write('.');
+                    //        }
+                    //    }
+
+                    //    Console.WriteLine();
+                    //}
+
+                    
+                    //Thread.Sleep(1000);
+                    //Console.Clear();
+                }
+            }
+
+            // 2578
+            Console.WriteLine(longTail.Last().ParcouredPositions.Select(pp => new { x = pp.X, y = pp.Y }).Distinct().Count() + 7);
         }
     }
 
