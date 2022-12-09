@@ -1,20 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Day9
 {
     internal class Program
     {
-        public static readonly List<string> maze = new List<string>
-        {
-            "......",
-            "......",
-            "......",
-            "......",
-            "H....."
-        };
-
         static void Main(string[] args)
         {
             var moves = System.IO.File.ReadAllText(@"input.txt").Split('\n').Where(s => !string.IsNullOrWhiteSpace(s))
@@ -53,12 +45,7 @@ namespace Day9
                 }
             }
 
-            foreach (var pos in tail.ParcouredPositions)
-            {
-                Console.WriteLine($"x {pos.X} y {pos.Y}");
-            }
-
-            Console.WriteLine();
+            Console.WriteLine(tail.ParcouredPositions.Select(pp => new { x = pp.X, y = pp.Y }).Distinct().ToList().Count());
         }
     }
 
@@ -67,10 +54,10 @@ namespace Day9
         public Tail()
         {
             CurrentPosition = new Position(0, 0);
-            ParcouredPositions= new HashSet<Position>() { new Position(0, 0) };
+            ParcouredPositions= new List<Position>() { new Position(0, 0) };
         }
 
-        public HashSet<Position> ParcouredPositions { get; set; }
+        public List<Position> ParcouredPositions { get; set; }
 
         public Position CurrentPosition { get; set; }
 
@@ -103,25 +90,25 @@ namespace Day9
 
             if (position.X != CurrentPosition.X)
             {
-                if (position.X > 0)
+                if (position.X > CurrentPosition.X)
                 {
                     end.X = position.X - CurrentPosition.X - 1 + diagX;
                 }
-                else if (position.X < 0)
+                else if (position.X < CurrentPosition.X)
                 {
-                    end.X = CurrentPosition.X - position.X + 1 - diagX;
+                    end.X = position.X - CurrentPosition.X + 1 - diagX;
                 }
             }
 
             if (position.Y != CurrentPosition.Y)
             {
-                if (position.Y > 0)
+                if (position.Y > CurrentPosition.Y)
                 {
                     end.Y = position.Y - CurrentPosition.Y - 1 + diagY;
                 }
-                else if (position.Y < 0)
+                else if (position.Y < CurrentPosition.Y)
                 {
-                    end.Y = CurrentPosition.Y - position.Y + 1 - diagY;
+                    end.Y = position.Y - CurrentPosition.Y + 1 - diagY;
                 }
             }
 
@@ -131,10 +118,7 @@ namespace Day9
 
     public class Position
     {
-        public Position()
-        {
-
-        }
+        public Position() {}
 
         public Position(int x, int y)
         {
