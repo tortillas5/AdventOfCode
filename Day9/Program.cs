@@ -71,9 +71,6 @@ namespace Day9
                             break;
                     }
 
-                    //Console.WriteLine(move.Direction);
-                    //Console.WriteLine();
-
                     for (int j = 0; j < longTail.Count; j++)
                     {
                         if (longTail[j].NeedToMove(longTail[j == 0 ? 0 : j - 1].CurrentPosition))
@@ -102,14 +99,14 @@ namespace Day9
                         //    Console.WriteLine();
                         //}
 
-                        //Console.ReadLine();
+                        //Thread.Sleep(100);
                         //Console.Clear();
                     }
                 }
             }
 
             // 2578
-            Console.WriteLine(longTail.Last().ParcouredPositions.Select(pp => new { x = pp.X, y = pp.Y }).Distinct().Count() + 7);
+            Console.WriteLine(longTail.Last().ParcouredPositions.Select(pp => new { x = pp.X, y = pp.Y }).Distinct().Count());
         }
     }
 
@@ -130,7 +127,7 @@ namespace Day9
 
         public bool NeedToMove(Position position)
         {
-            Position diff = CurrentPosition.Diff(position);
+            Position diff = CurrentPosition.DiffAbs(position);
 
             return diff.X > 1 || diff.Y > 1;
         }
@@ -138,45 +135,115 @@ namespace Day9
         public Position WhereToMove(Position position)
         {
             Position end = new Position();
-            int diagX = 0;
-            int diagY = 0;
 
-            if (position.X != CurrentPosition.X && position.Y != CurrentPosition.Y)
+            Position diff = CurrentPosition.Diff(position);
+
+            // > 
+            if (diff.X == 2 && diff.Y == 0)
             {
-                Position diff = CurrentPosition.Diff(position);
-
-                if (diff.X > diff.Y)
-                {
-                    diagY++;
-                }
-                else
-                {
-                    diagX++;
-                }
+                end.X++;
             }
 
-            if (position.X != CurrentPosition.X)
+            // <
+            if (diff.X == -2 && diff.Y == 0)
             {
-                if (position.X > CurrentPosition.X)
-                {
-                    end.X = position.X - CurrentPosition.X - 1 + diagX;
-                }
-                else if (position.X < CurrentPosition.X)
-                {
-                    end.X = position.X - CurrentPosition.X + 1 - diagX;
-                }
+                end.X--;
             }
 
-            if (position.Y != CurrentPosition.Y)
+            // ^
+            if (diff.Y == 2 && diff.X == 0)
             {
-                if (position.Y > CurrentPosition.Y)
-                {
-                    end.Y = position.Y - CurrentPosition.Y - 1 + diagY;
-                }
-                else if (position.Y < CurrentPosition.Y)
-                {
-                    end.Y = position.Y - CurrentPosition.Y + 1 - diagY;
-                }
+                end.Y++;
+            }
+
+            // v
+            if (diff.Y == -2 && diff.X == 0)
+            {
+                end.Y--;
+            }
+
+            // ^>
+            if (diff.Y == 2 && diff.X == 1)
+            {
+                end.X++;
+                end.Y++;
+            }
+
+            // v>
+            if (diff.Y == -2 && diff.X == 1)
+            {
+                end.X++;
+                end.Y--;
+            }
+
+            // ^<
+            if (diff.Y == 2 && diff.X == -1)
+            {
+                end.X--;
+                end.Y++;
+            }
+
+            // v<
+            if (diff.Y == -2 && diff.X == -1)
+            {
+                end.X--;
+                end.Y--;
+            }
+
+            // >^
+            if (diff.X == 2 && diff.Y == 1)
+            {
+                end.X++;
+                end.Y++;
+            }
+
+            // >v
+            if (diff.X == 2 && diff.Y == -1)
+            {
+                end.X++;
+                end.Y--;
+            }
+
+            // <^
+            if (diff.X == -2 && diff.Y == 1)
+            {
+                end.X--;
+                end.Y++;
+            }
+
+            // <v
+            if (diff.X == -2 && diff.Y == -1)
+            {
+                end.X--;
+                end.Y--;
+            }
+
+            // >>^^
+            if (diff.X == 2 && diff.Y == 2)
+            {
+                end.X++;
+                end.Y++;
+            }
+
+            // >>vv
+            if (diff.X == 2 && diff.Y == -2)
+            {
+                end.X++;
+                end.Y--;
+            }
+
+            // <<vv
+            if (diff.X == -2 && diff.Y == -2)
+            {
+                end.X--;
+                end.Y--;
+            }
+
+            // <<^^
+            if (diff.X == -2 && diff.Y == 2)
+            {
+                end.X--;
+                end.Y++;
             }
 
             return end;
@@ -202,9 +269,14 @@ namespace Day9
         public int X;
         public int Y;
 
-        public Position Diff(Position position)
+        public Position DiffAbs(Position position)
         {
             return new Position(Math.Abs(X - position.X), Math.Abs(Y - position.Y));
+        }
+
+        public Position Diff(Position position)
+        {
+            return new Position(position.X - X, position.Y - Y);
         }
     }
 
