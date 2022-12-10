@@ -34,6 +34,8 @@ namespace Day10
                     currentIndexInput++;
                 }
 
+                WriteCrt(cycle, x);
+
                 remainingCycle--;
 
                 if (remainingCycle == 0)
@@ -45,7 +47,25 @@ namespace Day10
 
                 cycle++;
 
-                WriteXAndSignalStrength(cycle, x);
+                // P1
+                // WriteXAndSignalStrength(cycle, x);
+            }
+        }
+
+        public static void WriteCrt(int cycle, int x)
+        {
+            if (x == (cycle - 1) % 40 || x + 1 == (cycle - 1) % 40 || x - 1 == (cycle - 1) % 40)
+            {
+                Console.Write('#');
+            }
+            else
+            {
+                Console.Write('.');
+            }
+
+            if (cycle % 40 == 0)
+            {
+                Console.WriteLine();
             }
         }
 
