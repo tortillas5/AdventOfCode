@@ -81,26 +81,32 @@ namespace Day9
                             longTail[j].ParcouredPositions.Add(new Position(longTail[j].CurrentPosition));
                         }
 
-                        //for (int m = 20; m >= -10; m--)
-                        //{
-                        //    for (int k = -10; k < 20; k++)
-                        //    {
-                        //        Tail t = longTail.FirstOrDefault(t => t.CurrentPosition.X == k && t.CurrentPosition.Y == m);
-                        //        if (t != null)
-                        //        {
-                        //            Console.Write(t.Index);
-                        //        }
-                        //        else
-                        //        {
-                        //            Console.Write('.');
-                        //        }
-                        //    }
+                        int minX = longTail.Min(t => t.CurrentPosition.X) - 3;
+                        int maxX = longTail.Max(t => t.CurrentPosition.X) + 3;
 
-                        //    Console.WriteLine();
-                        //}
+                        int minY = longTail.Min(t => t.CurrentPosition.Y) - 2;
+                        int maxY = longTail.Max(t => t.CurrentPosition.Y) + 2;
 
-                        //Thread.Sleep(100);
-                        //Console.Clear();
+                        for (int m = maxY; m >= minY; m--)
+                        {
+                            for (int k = minX; k < maxX; k++)
+                            {
+                                Tail t = longTail.FirstOrDefault(t => t.CurrentPosition.X == k && t.CurrentPosition.Y == m);
+                                if (t != null)
+                                {
+                                    Console.Write(t.Index);
+                                }
+                                else
+                                {
+                                    Console.Write('.');
+                                }
+                            }
+
+                            Console.WriteLine();
+                        }
+
+                        Thread.Sleep(10);
+                        Console.Clear();
                     }
                 }
             }
