@@ -49,7 +49,7 @@ namespace Day9
             // P1 6175
             Console.WriteLine(tail.ParcouredPositions.Select(pp => new { x = pp.X, y = pp.Y }).Distinct().Count());
 
-            List<Tail> longTail = new List<Tail>() { new Tail(), new Tail(), new Tail(), new Tail(), new Tail(), new Tail(), new Tail(), new Tail(), new Tail(), new Tail() };
+            List<Tail> longTail = new List<Tail>() { new Tail('H'), new Tail('1'), new Tail('2'), new Tail('3'), new Tail('4'), new Tail('5'), new Tail('6'), new Tail('7'), new Tail('8'), new Tail('9') };
 
             foreach (var move in moves)
             {
@@ -71,6 +71,9 @@ namespace Day9
                             break;
                     }
 
+                    //Console.WriteLine(move.Direction);
+                    //Console.WriteLine();
+
                     for (int j = 0; j < longTail.Count; j++)
                     {
                         if (longTail[j].NeedToMove(longTail[j == 0 ? 0 : j - 1].CurrentPosition))
@@ -80,28 +83,28 @@ namespace Day9
                             longTail[j].CurrentPosition.Y += newPosition.Y;
                             longTail[j].ParcouredPositions.Add(new Position(longTail[j].CurrentPosition));
                         }
+
+                        //for (int m = 20; m >= -10; m--)
+                        //{
+                        //    for (int k = -10; k < 20; k++)
+                        //    {
+                        //        Tail t = longTail.FirstOrDefault(t => t.CurrentPosition.X == k && t.CurrentPosition.Y == m);
+                        //        if (t != null)
+                        //        {
+                        //            Console.Write(t.Index);
+                        //        }
+                        //        else
+                        //        {
+                        //            Console.Write('.');
+                        //        }
+                        //    }
+
+                        //    Console.WriteLine();
+                        //}
+
+                        //Console.ReadLine();
+                        //Console.Clear();
                     }
-
-                    //for (int j = 20; j >= -10; j--)
-                    //{
-                    //    for (int k = -10; k < 20; k++)
-                    //    {
-                    //        if (longTail.Select(t => t.CurrentPosition).FirstOrDefault(pp => pp.X == k && pp.Y == j) != null)
-                    //        {
-                    //            Console.Write('H');
-                    //        }
-                    //        else
-                    //        {
-                    //            Console.Write('.');
-                    //        }
-                    //    }
-
-                    //    Console.WriteLine();
-                    //}
-
-                    
-                    //Thread.Sleep(1000);
-                    //Console.Clear();
                 }
             }
 
@@ -112,15 +115,18 @@ namespace Day9
 
     public class Tail
     {
-        public Tail()
+        public Tail(char? index = null)
         {
             CurrentPosition = new Position(0, 0);
-            ParcouredPositions= new List<Position>() { new Position(0, 0) };
+            ParcouredPositions = new List<Position>() { new Position(0, 0) };
+            Index = index ?? '0';
         }
 
         public List<Position> ParcouredPositions { get; set; }
 
         public Position CurrentPosition { get; set; }
+
+        public char Index { get; set; }
 
         public bool NeedToMove(Position position)
         {
