@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Text.RegularExpressions;
 
 namespace Day01
 {
@@ -56,87 +51,47 @@ namespace Day01
 
         #region Part 2
 
-        private static readonly List<string> ListeNombreEnLettre = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-
+        /// <summary>
+        /// Retourne une entier à partir d'une chaîne de caractère qui représente un nombre.
+        /// </summary>
+        /// <param name="nombre">Nombre en texte.</param>
+        /// <returns>Un entier.</returns>
         private static int ToNumber(string nombre)
         {
-            switch (nombre)
+            return nombre switch
             {
-                case "one": return 1;
-                case "two": return 2;
-                case "three": return 3;
-                case "four": return 4;
-                case "five": return 5;
-                case "six": return 6;
-                case "seven": return 7;
-                case "eight": return 8;
-                case "nine": return 9;
-            }
-
-            throw new Exception();
+                "one" => 1,
+                "two" => 2,
+                "three" => 3,
+                "four" => 4,
+                "five" => 5,
+                "six" => 6,
+                "seven" => 7,
+                "eight" => 8,
+                "nine" => 9,
+                _ => int.Parse(nombre),
+            };
         }
 
         public static int CalculerPart2()
         {
             List<string> inputLines = InputHandler.GetInputLines();
-            List<string> inputLinesSansTexte = [];
 
-
-            foreach (string line in inputLines)
-            {
-                Dictionary<int, string> keyValues = new Dictionary<int, string>();
-
-                foreach (string nombreEnLettre in ListeNombreEnLettre)
-                {
-                    int pos = line.IndexOf(nombreEnLettre);
-
-                    if (pos != -1)
-                    {
-                        keyValues.Add(pos, nombreEnLettre);
-                    }
-                }
-
-                string res = line;
-
-                for (int i = 0; i < keyValues.Count; i++)
-                {
-                    res = res.Insert(keyValues.ElementAt(i).Key + i, ToNumber(keyValues.ElementAt(i).Value).ToString());
-                }
-
-                inputLinesSansTexte.Add(res);
-            }
+            // Regex des valeurs qu'on veut trouver
+            string regex = new(@"\d|one|two|three|four|five|six|seven|eight|nine");
 
             List<string> listNombre = [];
 
-            // Pour chaque ligne
-            foreach (string line in inputLinesSansTexte)
+            foreach (string line in inputLines)
             {
-                char first;
-                char last;
-                string nombre;
+                // On regarde le premier match en partant de gauche.
+                Match first = Regex.Matches(line, regex)[0];
 
-                // Nombre de nombres dans la ligne
-                int nbDigit = line.Count(Char.IsDigit);
+                // On regarde le premier match en partant de droite.
+                Match last = Regex.Matches(line, regex, RegexOptions.RightToLeft)[0];
 
-                // Un seul nombre
-                if (nbDigit == 1)
-                {
-                    first = line.First(char.IsDigit);
-
-                    nombre = char.ToString(first) + char.ToString(first);
-                }
-                else
-                {
-                    // Plusieurs nombres
-
-                    first = line.First(char.IsDigit);
-                    last = line.Last(char.IsDigit);
-
-                    nombre = char.ToString(first) + char.ToString(last);
-                }
-
-                // Ajout du nombre combiné à la liste.
-                listNombre.Add(nombre);
+                // On ajoute les match trouvés.
+                listNombre.Add(ToNumber(first.Value).ToString() + ToNumber(last.Value).ToString());
             }
 
             // Passage en int.
