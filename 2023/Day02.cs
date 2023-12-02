@@ -67,6 +67,27 @@ namespace AdventOfCode
             return validGames.Sum(vg => vg.GameId);
         }
 
+        public static int CalculerPart2()
+        {
+            LoadGames();
+
+            int total = 0;
+
+            foreach (var game in Games)
+            {
+                var sets = game.Sets.SelectMany(s => s).GroupBy(s => s.Color, (s, k) => new Set { Color = s, Number = k.Max(se => se.Number) }).ToList();
+
+                var redSet = sets.Find(s => s.Color == Color.red);
+                var greenSet = sets.Find(s => s.Color == Color.green);
+                var blueSet = sets.Find(s => s.Color == Color.blue);
+
+                int power = redSet.Number * greenSet.Number * blueSet.Number;
+                total += power;
+            }
+
+            return total;
+        }
+
         private static void LoadGames()
         {
             List<string> lines = InputHandler.GetInputLines(InputPath);
