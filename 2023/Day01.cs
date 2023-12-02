@@ -1,11 +1,11 @@
 ﻿using System.Text.RegularExpressions;
 using AdventOfCode.Utils;
 
-namespace Day01
+namespace AdventOfCode
 {
     internal static class Day01
     {
-        private static string InputPath = Path.Combine(Environment.CurrentDirectory, "Inputs", "Day01.txt");
+        private static readonly string InputPath = Path.Combine(Environment.CurrentDirectory, "Inputs", "Day01.txt");
 
         #region Part 1
 
@@ -54,28 +54,6 @@ namespace Day01
 
         #region Part 2
 
-        /// <summary>
-        /// Retourne une entier à partir d'une chaîne de caractère qui représente un nombre.
-        /// </summary>
-        /// <param name="nombre">Nombre en texte.</param>
-        /// <returns>Un entier.</returns>
-        private static int ToNumber(string nombre)
-        {
-            return nombre switch
-            {
-                "one" => 1,
-                "two" => 2,
-                "three" => 3,
-                "four" => 4,
-                "five" => 5,
-                "six" => 6,
-                "seven" => 7,
-                "eight" => 8,
-                "nine" => 9,
-                _ => int.Parse(nombre),
-            };
-        }
-
         public static int CalculerPart2()
         {
             List<string> inputLines = InputHandler.GetInputLines(InputPath);
@@ -101,6 +79,28 @@ namespace Day01
             List<int> listeInt = listNombre.Select(int.Parse).ToList();
 
             return listeInt.Sum();
+        }
+
+        /// <summary>
+        /// Retourne une entier à partir d'une chaîne de caractère qui représente un nombre.
+        /// </summary>
+        /// <param name="nombre">Nombre en texte.</param>
+        /// <returns>Un entier.</returns>
+        private static int ToNumber(string nombre)
+        {
+            return nombre switch
+            {
+                "one" => 1,
+                "two" => 2,
+                "three" => 3,
+                "four" => 4,
+                "five" => 5,
+                "six" => 6,
+                "seven" => 7,
+                "eight" => 8,
+                "nine" => 9,
+                _ => int.Parse(nombre),
+            };
         }
 
         #endregion Part 2
