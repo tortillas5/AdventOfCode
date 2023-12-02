@@ -1,9 +1,12 @@
 ﻿using System.Text.RegularExpressions;
+using AdventOfCode.Utils;
 
 namespace Day01
 {
-    internal class Calculateur
+    internal static class Day01
     {
+        private static string InputPath = Path.Combine(Environment.CurrentDirectory, "Inputs", "Day01.txt");
+
         #region Part 1
 
         public static int CalculerPart1()
@@ -11,7 +14,7 @@ namespace Day01
             List<string> listNombre = [];
 
             // Pour chaque ligne
-            foreach (string line in InputHandler.GetInputLines())
+            foreach (string line in InputHandler.GetInputLines(InputPath))
             {
                 char first;
                 char last;
@@ -75,7 +78,7 @@ namespace Day01
 
         public static int CalculerPart2()
         {
-            List<string> inputLines = InputHandler.GetInputLines();
+            List<string> inputLines = InputHandler.GetInputLines(InputPath);
 
             // Regex des valeurs qu'on veut trouver
             string regex = new(@"\d|one|two|three|four|five|six|seven|eight|nine");
