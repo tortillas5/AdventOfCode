@@ -62,6 +62,47 @@ namespace AdventOfCode
             return partsInEngine.Sum();
         }
 
+        public static int CalculerPart2()
+        {
+            LoadEngineParts();
+
+            List<SpecialCharacter> gears = SpecialCharactersInFile.Where(sc => sc.Character == '*').ToList();
+            List<EnginePart> enginePartsAdjacentToGear = new();
+
+            foreach (EnginePart enginePart in EngineParts)
+            {
+                foreach (SpecialCharacter specialCharacter in gears)
+                {
+                    if (enginePart.NumberPositions.Exists(specialCharacter.Position.IsAdjacent))
+                    {
+                        enginePartsAdjacentToGear.Add(enginePart);
+                    }
+                }
+            }
+
+            List<int> ratios = new();
+
+            foreach (SpecialCharacter gear in gears)
+            {
+                List<EnginePart> gearedEnginePart = new();
+
+                foreach(EnginePart enginePart in enginePartsAdjacentToGear)
+                {
+                    if (enginePart.NumberPositions.Exists(gear.Position.IsAdjacent))
+                    {
+                        gearedEnginePart.Add(enginePart);
+                    }
+                }
+
+                if (gearedEnginePart.Count == 2)
+                {
+                    ratios.Add(gearedEnginePart[0].Number * gearedEnginePart[1].Number);
+                }
+            }
+
+            return ratios.Sum();
+        }
+
         private static void LoadEngineParts()
         {
             EngineParts = new List<EnginePart>();
