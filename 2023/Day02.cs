@@ -2,7 +2,7 @@
 
 namespace AdventOfCode
 {
-    #region Utils
+    #region Classes
 
     internal enum Color
     {
@@ -23,7 +23,7 @@ namespace AdventOfCode
         public int Number { get; set; }
     }
 
-    #endregion Utils
+    #endregion Classes
 
     internal static class Day02
     {
