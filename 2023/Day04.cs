@@ -2,12 +2,26 @@
 
 namespace AdventOfCode
 {
+    /// <summary>
+    /// Jour 4 de advent of code.
+    /// https://adventofcode.com/2023/day/4
+    /// </summary>
     internal class Day04
     {
+        /// <summary>
+        /// Chemin vers l'input du jour 4.
+        /// </summary>
         private static readonly string InputPath = Path.Combine(Environment.CurrentDirectory, "Inputs", "Day04.txt");
 
-        private static List<Card>? Cards { get; set; }
+        /// <summary>
+        /// Liste de cartes à grater.
+        /// </summary>
+        private static List<Card> Cards { get; set; } = [];
 
+        /// <summary>
+        /// Compte les points des cartes à grater gagnantes.
+        /// </summary>
+        /// <returns>Nombre de points.</returns>
         public static int CalculerPart1()
         {
             LoadCards();
@@ -16,7 +30,7 @@ namespace AdventOfCode
 
             foreach (Card card in Cards)
             {
-                int nbWin = card.Numbers.Count(card.WinningNumbers.Contains);
+                int nbWin = CountWinningCards(card);
 
                 if (nbWin == 1)
                 {
@@ -31,46 +45,40 @@ namespace AdventOfCode
             return points.Sum();
         }
 
+        /// <summary>
+        /// Accumule les cartes et retourne leur nombre total.
+        /// </summary>
+        /// <returns>Nombre de cartes.</returns>
         public static long CalculerPart2()
         {
             LoadCards();
 
             for (int i = 0; i < Cards.Count; i++)
             {
-                Cards[i].NbWin = GetNbWinCard(Cards[i]);
+                int nbWin = CountWinningCards(Cards[i]);
+
+                for (int j = 1; j < nbWin + 1; j++)
+                {
+                    Cards[i + j].CardCount += Cards[i].CardCount;
+                }
             }
 
-            return GetNbWinningCards(Cards.Where(c => c.NbWin > 0).ToList());
+            return Cards.Sum(c => c.CardCount);
         }
 
-        private static int GetNbWinCard(Card card)
+        /// <summary>
+        /// Retourne le nombre de numéros gagnants pour une carte.
+        /// </summary>
+        /// <param name="card">Une carte.</param>
+        /// <returns>Nombre de numéros gagnants.</returns>
+        private static int CountWinningCards(Card card)
         {
             return card.Numbers.Count(card.WinningNumbers.Contains);
         }
 
-        private static long GetNbWinningCards(List<Card> winningCards)
-        {
-            List<Card> winCards = [];
-
-            foreach (var winningCard in winningCards)
-            {
-                for (int i = 1; i < winningCard.NbWin + 1; i++)
-                {
-                    if (winningCard.CardNumber + i < Cards.Count)
-                    {
-                        Card card = Cards.FirstOrDefault(c => c.CardNumber == winningCard.CardNumber + i);
-
-                        if (card != null && card.NbWin > 0)
-                        {
-                            winCards.Add(card);
-                        }
-                    }
-                }
-            }
-
-            return winningCards.Count + GetNbWinningCards(winCards.Where(wc => wc.NbWin > 0).ToList());
-        }
-
+        /// <summary>
+        /// Parse l'input et rempli <see cref="Cards"/>.
+        /// </summary>
         private static void LoadCards()
         {
             Cards = [];
@@ -97,12 +105,39 @@ namespace AdventOfCode
             }
         }
 
-        private class Card
+        /// <summary>
+        /// Représente une carte à grater.
+        /// </summary>
+        private sealed class Card
         {
+            /// <summary>
+            /// Initialise une nouvelle instance de la classe <see cref="Card"/>.
+            /// </summary>
+            public Card()
+            {
+                Numbers = [];
+                WinningNumbers = [];
+            }
+
+            /// <summary>
+            /// Nombre d'exemplaire de la carte.
+            /// </summary>
+            public int CardCount { get; set; } = 1;
+
+            /// <summary>
+            /// Identifiant de la carte.
+            /// </summary>
             public int CardNumber { get; set; }
+
+            /// <summary>
+            /// Numéros de la carte.
+            /// </summary>
             public List<int> Numbers { get; set; }
+
+            /// <summary>
+            /// Numéros gagnants de la carte.
+            /// </summary>
             public List<int> WinningNumbers { get; set; }
-            public int NbWin { get; set; }
         }
     }
 }
