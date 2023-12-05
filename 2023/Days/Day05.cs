@@ -1,5 +1,4 @@
 ﻿using AdventOfCode.Utils;
-using static AdventOfCode.Days.Day05;
 
 namespace AdventOfCode.Days
 {
@@ -33,64 +32,29 @@ namespace AdventOfCode.Days
             return locations.Min();
         }
 
-        private static long GetLocation(long start, long range, AlmanacP2 almanac)
-        {
-            long minLocation = long.MaxValue;
-
-            for (long i = 0; i < range; i++)
-            {
-                long soil = Map(start + i, almanac.SeedToSoil);
-                long fertilizer = Map(soil, almanac.SoilToFertilizer);
-                long water = Map(fertilizer, almanac.FertilizerToWater);
-                long light = Map(water, almanac.WaterToLight);
-                long temperature = Map(light, almanac.LightToTemperature);
-                long humidite = Map(temperature, almanac.TemperatureToHumidity);
-                long location = Map(humidite, almanac.HumidityToLocation);
-
-                if (location < minLocation)
-                {
-                    minLocation = location;
-                }
-
-                if (i % 10000000 == 0)
-                {
-                    Console.WriteLine($"Seed : {start}, {i}/{range}");
-                }
-            }
-
-            return minLocation;
-        }
-
-        internal class Res
-        {
-            public long MinLocation { get; set; } = long.MaxValue;
-        }
-
         public static long CalculerPart2()
         {
             AlmanacP2 almanac = GetAlmanacP2();
 
-            Res res = new();
+            List<long> seeds = [];
 
             foreach (var seed in almanac.Seeds)
             {
-                long rangeDivided = seed.Range / 10;
-
-                Parallel.For(0, 10, i =>
+                for (long i = seed.Start; i < seed.Start + seed.Range; i++)
                 {
-                    long min = GetLocation(seed.Start + (rangeDivided * i), rangeDivided, almanac);
-
-                    lock (res)
-                    {
-                        if (min < res.MinLocation)
-                        {
-                            res.MinLocation = min;
-                        }
-                    }
-                });
+                    seeds.Add(i);
+                }
             }
 
-            return res.MinLocation;
+            IEnumerable<long> soils = seeds.AsParallel().Select(s => Map(s, almanac.SeedToSoil));
+            IEnumerable<long> fertilizers = soils.AsParallel().Select(s => Map(s, almanac.SoilToFertilizer));
+            IEnumerable<long> waters = fertilizers.AsParallel().Select(s => Map(s, almanac.FertilizerToWater));
+            IEnumerable<long> lights = waters.AsParallel().Select(s => Map(s, almanac.WaterToLight));
+            IEnumerable<long> temperatures = lights.AsParallel().Select(s => Map(s, almanac.LightToTemperature));
+            IEnumerable<long> humidities = temperatures.AsParallel().Select(s => Map(s, almanac.TemperatureToHumidity));
+            IEnumerable<long> locations = humidities.AsParallel().Select(s => Map(s, almanac.HumidityToLocation)).ToArray();
+
+            return locations.Min();
         }
 
         /// <summary>
@@ -377,7 +341,7 @@ namespace AdventOfCode.Days
             /// <summary>
             /// Longueur de la plage.
             /// </summary>
-            public long RangeLength => map[2];
+            public long RangeLength => map[2] - 1;
 
             /// <summary>
             /// Début de la plage de l'origine.
