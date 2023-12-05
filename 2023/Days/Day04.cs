@@ -1,6 +1,6 @@
 ﻿using AdventOfCode.Utils;
 
-namespace AdventOfCode
+namespace AdventOfCode.Days
 {
     /// <summary>
     /// Jour 4 de advent of code.
@@ -30,16 +30,7 @@ namespace AdventOfCode
 
             foreach (Card card in Cards)
             {
-                int nbWin = CountWinningCards(card);
-
-                if (nbWin == 1)
-                {
-                    points.Add(nbWin);
-                }
-                else
-                {
-                    points.Add((int)Math.Pow(2, nbWin - 1));
-                }
+                points.Add((int)Math.Pow(2, CountWinningCards(card) - 1));
             }
 
             return points.Sum();
@@ -91,7 +82,7 @@ namespace AdventOfCode
 
                 string[] sGameAndCards = line.Split(":");
 
-                int cardNumber = int.Parse(sGameAndCards[0].Split(" ").Last());
+                int cardNumber = int.Parse(sGameAndCards[0][(sGameAndCards[0].LastIndexOf(' ') + 1)..]);
                 card.CardNumber = cardNumber;
 
                 string[] sWinningCardsAndCards = sGameAndCards[1].Split("|");

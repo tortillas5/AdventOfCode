@@ -1,14 +1,23 @@
-﻿using System.Text.RegularExpressions;
-using AdventOfCode.Utils;
+﻿using AdventOfCode.Utils;
+using System.Text.RegularExpressions;
 
-namespace AdventOfCode
+namespace AdventOfCode.Days
 {
+    /// <summary>
+    /// Jour 1 de advent of code.
+    /// https://adventofcode.com/2023/day/1
+    /// </summary>
     internal static class Day01
     {
+        /// <summary>
+        /// Chemin vers l'input du jour 1.
+        /// </summary>
         private static readonly string InputPath = Path.Combine(Environment.CurrentDirectory, "Inputs", "Day01.txt");
 
-        #region Part 1
-
+        /// <summary>
+        /// Compose des nombres sur 2 décimales en prenant le premier et le dernier de chaque ligne, puis les sommes.
+        /// </summary>
+        /// <returns>Somme de nombres.</returns>
         public static int CalculerPart1()
         {
             List<string> listNombre = [];
@@ -21,7 +30,7 @@ namespace AdventOfCode
                 string nombre;
 
                 // Nombre de nombres dans la ligne
-                int nbDigit = line.Count(Char.IsDigit);
+                int nbDigit = line.Count(char.IsDigit);
 
                 // Un seul nombre
                 if (nbDigit == 1)
@@ -50,10 +59,10 @@ namespace AdventOfCode
             return listeInt.Sum();
         }
 
-        #endregion Part 1
-
-        #region Part 2
-
+        /// <summary>
+        /// Compose des nombres sur 2 décimales en prenant le premier et le dernier de chaque ligne, qu'il soit sous forme de nombre (0-9) ou de texte (one - nine), puis les sommes.
+        /// </summary>
+        /// <returns>Somme de nombres.</returns>
         public static int CalculerPart2()
         {
             List<string> inputLines = InputHandler.GetInputLines(InputPath);
@@ -102,7 +111,5 @@ namespace AdventOfCode
                 _ => int.Parse(nombre),
             };
         }
-
-        #endregion Part 2
     }
 }

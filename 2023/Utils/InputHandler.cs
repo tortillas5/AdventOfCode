@@ -3,13 +3,8 @@
     /// <summary>
     /// Classe qui gère les actions sur l'input.
     /// </summary>
-    public class InputHandler
+    public static class InputHandler
     {
-        /// <summary>
-        /// Ficher texte lu.
-        /// </summary>
-        private static string InputData;
-
         /// <summary>
         /// Retourne l'input non traitée.
         /// </summary>
