@@ -14,7 +14,7 @@ namespace AdventOfCode.Days
         private static readonly string InputPath = Path.Combine(Environment.CurrentDirectory, "Inputs", "Day05.txt");
 
         /// <summary>
-        /// Pour un Almanach, retourne l'emplacement le plus petit correspondant aux graines.
+        /// Pour un Almanach, retourne l'emplacement le plus petit correspondant aux graines (20 graines).
         /// </summary>
         /// <returns>Le numéro d'un emplacement.</returns>
         public static long CalculerPart1()
@@ -32,6 +32,11 @@ namespace AdventOfCode.Days
             return locations.Min();
         }
 
+        /// <summary>
+        /// Pour un Almanach, retourne l'emplacement le plus petit correspondant aux graines (2.5 Milliards de graines).
+        /// Version brute-force, prend ~15 minutes à jouer.
+        /// </summary>
+        /// <returns>Le numéro d'un emplacement.</returns>
         public static long CalculerPart2()
         {
             AlmanacP2 almanac = GetAlmanacP2();
@@ -55,6 +60,41 @@ namespace AdventOfCode.Days
             IEnumerable<long> locations = humidities.AsParallel().Select(s => Map(s, almanac.HumidityToLocation)).ToArray();
 
             return locations.Min();
+        }
+
+        /// <summary>
+        /// Pour un Almanach, retourne l'emplacement le plus petit correspondant aux graines (2.5 Milliards de graines).
+        /// Version rapide, quelques ms à jouer.
+        /// </summary>
+        /// <returns>Le numéro d'un emplacement.</returns>
+        public static long CalculerPart2Rapide()
+        {
+            AlmanacP2 almanac = GetAlmanacP2();
+
+            long minLocation;
+
+            foreach (long location in almanac.HumidityToLocation.Select(hl => hl.DestinationRangeStart).OrderBy(dest => dest))
+            {
+                minLocation = location;
+
+                long reversedHumidity = ReverseMap(minLocation, almanac.HumidityToLocation);
+                long reversedTemp = ReverseMap(reversedHumidity, almanac.TemperatureToHumidity);
+                long reversedLight = ReverseMap(reversedTemp, almanac.LightToTemperature);
+                long reversedWater = ReverseMap(reversedLight, almanac.WaterToLight);
+                long reversedFert = ReverseMap(reversedWater, almanac.FertilizerToWater);
+                long reversedSoil = ReverseMap(reversedFert, almanac.SoilToFertilizer);
+                long reversedSeed = ReverseMap(reversedSoil, almanac.SeedToSoil);
+
+                foreach (var seed in almanac.Seeds)
+                {
+                    if (reversedSeed >= seed.Start && reversedSeed <= seed.Start + seed.Range)
+                    {
+                        return minLocation;
+                    }
+                }
+            }
+
+            return -1;
         }
 
         /// <summary>
@@ -233,6 +273,26 @@ namespace AdventOfCode.Days
             else
             {
                 return toMap;
+            }
+        }
+
+        /// <summary>
+        /// Retourne un nombre pour un nombre d'entrée et une liste de mappers.
+        /// </summary>
+        /// <param name="toMap">Input number to map to an output number.</param>
+        /// <param name="mappers">Mappers used to map the input number.</param>
+        /// <returns>Output number.</returns>
+        private static long ReverseMap(long toReverseMap, List<Mapper> mappers)
+        {
+            Mapper? mapper = mappers.Find(m => toReverseMap >= m.DestinationRangeStart && toReverseMap <= m.DestinationRangeStart + m.RangeLength);
+
+            if (mapper != null)
+            {
+                return toReverseMap - mapper.GetDifferenceSourceDestination;
+            }
+            else
+            {
+                return toReverseMap;
             }
         }
 
