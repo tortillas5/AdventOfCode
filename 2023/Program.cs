@@ -26,3 +26,8 @@ Console.WriteLine("Day 5 :");
 Console.WriteLine(Day05.CalculerPart1());
 Console.WriteLine(Day05.CalculerPart2Rapide());
 Console.WriteLine();
+
+Console.WriteLine("Day 6 :");
+Console.WriteLine(Day06.CalculerPart1());
+Console.WriteLine(Day06.CalculerPart2());
+Console.WriteLine();
