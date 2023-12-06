@@ -29,5 +29,5 @@ Console.WriteLine();
 
 Console.WriteLine("Day 6 :");
 Console.WriteLine(Day06.CalculerPart1());
-Console.WriteLine(Day06.CalculerPart2());
+Console.WriteLine(Day06.CalculerPart2Fast());
 Console.WriteLine();

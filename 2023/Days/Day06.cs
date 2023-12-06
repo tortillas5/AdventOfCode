@@ -56,6 +56,7 @@ namespace AdventOfCode.Days
 
         /// <summary>
         /// For the race, calculate the first winning value, the last winning value, then subtract them.
+        /// Brute-force but don't check the numbers in between ("fast" bruteforce).
         /// </summary>
         /// <returns>Number of possibilities that win the race.</returns>
         public static long CalculerPart2()
@@ -92,6 +93,24 @@ namespace AdventOfCode.Days
             }
 
             return lastValue - firstValue + 1;
+        }
+
+        /// <summary>
+        /// For the race, calculate the first winning value, the last winning value, then subtract them.
+        /// Using maths.
+        /// </summary>
+        /// <returns>Number of possibilities that win the race.</returns>
+        public static double CalculerPart2Fast()
+        {
+            LoadRace();
+
+            long duration = Race.Duration;
+            long distance = Race.DistanceToBeat;
+
+            double firstValue = Math.Floor((duration + Math.Sqrt(Math.Pow(duration, 2) - 4 * distance)) / 2);
+            double lastValue = Math.Ceiling((duration - Math.Sqrt(Math.Pow(duration, 2) - 4 * distance)) / 2);
+
+            return firstValue - lastValue + 1;
         }
 
         /// <summary>
