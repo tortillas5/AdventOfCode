@@ -56,7 +56,7 @@ namespace AdventOfCode.Days
 
         /// <summary>
         /// For the race, calculate the first winning value, the last winning value, then subtract them.
-        /// Brute-force but don't check the numbers in between ("fast" bruteforce).
+        /// Brute-force but don't check the numbers in between ("fast" brute-force).
         /// </summary>
         /// <returns>Number of possibilities that win the race.</returns>
         public static long CalculerPart2()
