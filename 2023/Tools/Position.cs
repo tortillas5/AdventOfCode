@@ -1,5 +1,10 @@
 ﻿namespace AdventOfCode.Tools
 {
+    internal enum PositionNextToPosition
+    {
+        Right, Left, Top, Bottom
+    }
+
     /// <summary>
     /// Represent a position in a X and Y grid.
     /// </summary>
@@ -52,6 +57,40 @@
             return new Position(position.X - X, position.Y - Y);
         }
 
+        public bool Equals(Position position)
+        {
+            return X == position.X && Y == position.Y;
+        }
+
+        public PositionNextToPosition GetPositionNextToPosition(Position position)
+        {
+            Position diff = Difference(position);
+
+            if (diff.X == 1 && diff.Y == 0)
+            {
+                return PositionNextToPosition.Right;
+            }
+
+            if (diff.X == -1 && diff.Y == 0)
+            {
+                return PositionNextToPosition.Left;
+            }
+
+            // Top
+            if (diff.X == 0 && diff.Y == -1)
+            {
+                return PositionNextToPosition.Top;
+            }
+
+            // Bottom
+            if (diff.X == 0 && diff.Y == 1)
+            {
+                return PositionNextToPosition.Bottom;
+            }
+
+            throw new InvalidOperationException("Positions are not next to each others.");
+        }
+
         /// <summary>
         /// Tell if a position is adjacent to the current one.
         /// </summary>
@@ -62,6 +101,19 @@
             Position diffPos = AbsoluteDifference(position);
 
             if (diffPos.X <= 1 && diffPos.Y <= 1)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool IsNextTo(Position position)
+        {
+            Position diffPos = AbsoluteDifference(position);
+
+            if ((diffPos.X == 1 && diffPos.Y == 0)
+                || (diffPos.X == 0 && diffPos.Y == 1))
             {
                 return true;
             }
