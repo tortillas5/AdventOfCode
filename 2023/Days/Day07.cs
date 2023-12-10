@@ -1,4 +1,4 @@
-﻿using AdventOfCode.Utils;
+﻿using AdventOfCode.Tools;
 
 namespace AdventOfCode.Days
 {
@@ -449,6 +449,7 @@ namespace AdventOfCode.Days
                     HandType handType = GetHandTypeJ(Cards.Where(c => c != CardJoker.J).ToArray());
                     var groupedCards = Cards.Where(c => c != CardJoker.J).GroupBy(c => c, (c, gc) => new { Card = c, Number = gc.Count() });
 
+#pragma warning disable CS8602 // Déréférencement d'une éventuelle référence null (MaxBy retourne un null-able mais il a forcément une valeur ici).
                     return handType switch
                     {
                         HandType.FourOfAKind => Cards.Select(c => c == CardJoker.J ? Cards.First(c2 => c2 != CardJoker.J) : c).ToArray(),
@@ -458,6 +459,7 @@ namespace AdventOfCode.Days
                         HandType.HighCard => Cards.Select(c => c == CardJoker.J ? groupedCards.MaxBy(gc => gc.Number).Card : c).ToArray(),
                         _ => throw new InvalidOperationException("Bad hand type."),
                     };
+#pragma warning restore CS8602 // Déréférencement d'une éventuelle référence null (MaxBy retourne un null-able mais il a forcément une valeur ici).
                 }
                 else
                 {

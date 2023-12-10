@@ -46,3 +46,8 @@ Console.WriteLine("Day 9 :");
 Console.WriteLine(Day09.CalculatePart1());
 Console.WriteLine(Day09.CalculatePart2());
 Console.WriteLine();
+
+//Console.WriteLine("Day 10 :");
+//Console.WriteLine(Day010.CalculatePart1());
+//Console.WriteLine(Day010.CalculatePart2());
+//Console.WriteLine();

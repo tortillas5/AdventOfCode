@@ -1,9 +1,9 @@
-﻿namespace AdventOfCode.Utils
+﻿namespace AdventOfCode.Tools
 {
     /// <summary>
     /// Class containing mathematical methods.
     /// </summary>
-    internal class Maths
+    internal static class Maths
     {
         /// <summary>
         /// Return the least common multiple for an array of numbers.

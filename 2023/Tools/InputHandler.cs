@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Utils
+﻿namespace AdventOfCode.Tools
 {
     /// <summary>
     /// Classe qui gère les actions sur l'input.

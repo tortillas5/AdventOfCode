@@ -1,5 +1,5 @@
-﻿using AdventOfCode.Utils;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using AdventOfCode.Tools;
 
 namespace AdventOfCode.Days
 {
