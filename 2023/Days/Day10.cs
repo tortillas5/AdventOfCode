@@ -14,74 +14,62 @@ namespace AdventOfCode.Days
         private static readonly string InputPath = Path.Combine(Environment.CurrentDirectory, "Inputs", "Day10.txt");
 
         /// <summary>
-        /// List of tiles representing the map.
-        /// </summary>
-        public static List<Tile> Map { get; set; } = [];
-
-        /// <summary>
         /// List of type of pipes.
         /// </summary>
         public static char[] Pipes { get; set; } = ['|', '-', 'L', 'J', '7', 'F', '.', 'S'];
+
+        /// <summary>
+        /// List of tiles representing the map.
+        /// </summary>
+        public static Tile[] TileMap { get; set; } = [];
 
         public static long CalculatePart1()
         {
             Load();
 
-            Tile startingTile = Map.First(m => m.Name == 'S');
+            int steps = 0;
+            Tile? currentTile = TileMap.First(m => m.Name == 'S');
+            Tile[] previousTiles = [currentTile, currentTile];
 
-            var adjacentToStartTiles = Map.Where(m => m.Position.IsNextTo(startingTile.Position));
-
-            Tile nextTile = adjacentToStartTiles.First(startingTile.IsConnected);
-            Tile previousTile = adjacentToStartTiles.Last(startingTile.IsConnected);
-
-            Tile oldNextTile = startingTile;
-            Tile oldPreviousTile = startingTile;
-
-            int steps = 1;
-
-            while (!nextTile.Position.Equals(previousTile.Position))
+            while (true)
             {
-                Tile ont = oldNextTile;
-                Tile opt = oldPreviousTile;
+                currentTile = Array.Find(TileMap, t => !previousTiles.Contains(t) && currentTile.Position.IsNextTo(t.Position) && currentTile.IsConnected(t));
 
-                oldNextTile = nextTile;
-                oldPreviousTile = previousTile;
+                if (currentTile == null)
+                {
+                    break;
+                }
 
-                nextTile = Map.Where(m => m.Position.IsNextTo(nextTile.Position)).First(adj => adj.IsConnected(nextTile) && !adj.Position.Equals(ont.Position));
-                previousTile = Map.Where(m => m.Position.IsNextTo(previousTile.Position)).First(adj => adj.IsConnected(previousTile) && !adj.Position.Equals(opt.Position));
-
-                Console.WriteLine($"next : {nextTile.Position}");
+                previousTiles[0] = previousTiles[1];
+                previousTiles[1] = currentTile;
 
                 steps++;
             }
 
-            // Parcourir le Loop des deux côtés en même temps.
-            // Quand les deux sont au même point, c'est l'endroit le plus loin.
-            // On retourne ce point.
-
-            return steps;
+            return (steps + 1) / 2;
         }
 
         public static long CalculatePart2()
         {
             Load();
 
-            return 2;
+            return -1;
         }
 
         private static void Load()
         {
-            Map = [];
-
             var lines = InputHandler.GetInputLines(InputPath);
+            var tileMap = new List<Tile>();
 
             for (int i = 0; i < lines.Count; i++)
             {
                 for (int j = 0; j < lines[i].Length; j++)
                 {
-                    Map.Add(new Tile(lines[i][j], new Position(i, j)));
+                    tileMap.Add(new Tile(lines[i][j], new Position(j, i)));
                 }
             }
+
+            TileMap = [.. tileMap];
         }
 
         internal class Tile
@@ -108,7 +96,7 @@ namespace AdventOfCode.Days
                 switch (positionNextToPosition)
                 {
                     case PositionNextToPosition.Left:
-                        if ("-LF".Contains(tile.Name))
+                        if ("-LF".Contains(tile.Name) && !"|LF".Contains(Name))
                         {
                             return true;
                         }
@@ -116,7 +104,7 @@ namespace AdventOfCode.Days
                         return false;
 
                     case PositionNextToPosition.Right:
-                        if ("-J7".Contains(tile.Name))
+                        if ("-J7".Contains(tile.Name) && !"|J7".Contains(Name))
                         {
                             return true;
                         }
@@ -124,7 +112,7 @@ namespace AdventOfCode.Days
                         return false;
 
                     case PositionNextToPosition.Top:
-                        if ("|7F".Contains(tile.Name))
+                        if ("|7F".Contains(tile.Name) && !"-7F".Contains(Name))
                         {
                             return true;
                         }
@@ -132,7 +120,7 @@ namespace AdventOfCode.Days
                         return false;
 
                     case PositionNextToPosition.Bottom:
-                        if ("|LJ".Contains(tile.Name))
+                        if ("|LJ".Contains(tile.Name) && !"-LJ".Contains(Name))
                         {
                             return true;
                         }
